@@ -1,41 +1,34 @@
 
-# s3-blob-store
+# swift-blob-store
 
-  Amazon S3 [abstract-blob-store](http://npmrepo.com/abstract-blob-store)
-
-  [![Build Status](https://travis-ci.org/jb55/s3-blob-store.svg)](https://travis-ci.org/jb55/s3-blob-store)
+  Openstack Swift [abstract-blob-store](http://npmrepo.com/abstract-blob-store)
 
   [![blob-store-compatible](https://raw.githubusercontent.com/maxogden/abstract-blob-store/master/badge.png)](https://github.com/maxogden/abstract-blob-store)
 
 ## Installation
 
-  Install with npm
+  Install with npm **TODO**
 
-    $ npm install s3-blob-store
+    $ npm install swift-blob-store
 
 ## Example
 
 ```js
-var aws = require('aws-sdk');
-var s3blobs = require('s3-blob-store');
+const SwiftClient = require('openstack-swift-client');
 
-var client = new aws.S3({
-  accessKeyId: process.env.S3_ACCESS_KEY,
-  secretAccessKey: process.env.S3_SECRET_KEY
-})
-
-var store = s3blobs({
-  client: client,
-  bucket: 'mybucket'
+const swift = new SwiftClient(new SwiftClient.KeystoneV3Authenticator(credentials));
+const store = SwiftBlobStore({
+  client: swift,
+  container: "my-container-name"
 });
 
 
-// write to s3
+// write to swift
 fs.createReadStream('/tmp/somefile.txt')
   .pipe(store.createWriteStream({ key: 'somefile.txt' }))
 
 
-// read from s3
+// read from swift
 store.createReadStream({ key: 'somefile.txt' })
   .pipe(fs.createWriteStream('/tmp/somefile.txt'))
 
@@ -46,38 +39,39 @@ store.exists({ key: 'somefile.txt' }, function(err, exists){
 
 ## API
 
-### var s3 = require('s3-blob-store')(options)
+### var swift = require('swift-blob-store')(options)
 
 `options` must be an object that has the following properties:
 
-`client`: an `require('aws-sdk').S3` instance
-`bucket`: your bucket
+`client`: an `require('openstack-swift-client')` instance
+`container`: your container name
 
-### s3.createWriteStream(opts, cb)
+### swift.createWriteStream(opts, cb)
 
 returns a writable stream that you can pipe data to.
 
 `opts` should be an object that has options `key` (will be the filename in
-your bucket)
+your container)
 
-`opts.params` additional [parameters](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#putObject-property) to pass to S3
+`opts.params` **TODO**
 
 `cb` will be called with `(err)` if there is was an error
 
-### s3.createReadStream(opts)
+### swift.createReadStream(opts)
 
 opts should be `{key: string (usually a hash or path + filename}`
 
-`opts.params` additional [parameters](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#getObject-property) to pass to S3
-`opts.concurrency` optional parameter for [s3-download-stream](https://github.com/jb55/s3-download-stream)
-`opts.chunkSize` optional parameter for [s3-download-stream](https://github.com/jb55/s3-download-stream)
+`opts.params` **TODO**
+`opts.concurrency` **?? TODO**
+`opts.chunkSize` **?? TODO**
 
-returns a readable stream of data for the file in your bucket whose key matches
+returns a readable stream of data for the file in your container whose key matches
 
 ## License
 
     The MIT License (MIT)
 
+    Copyright (c) 2018 Simon Schilling
     Copyright (c) 2014 William Casarin
 
     Permission is hereby granted, free of charge, to any person obtaining a copy

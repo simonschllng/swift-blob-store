@@ -1,18 +1,20 @@
 
-
+var SwiftClient = require('openstack-swift-client');
 var blobTests = require('abstract-blob-store/tests');
 var test = require('tape');
-var aws = require('aws-sdk');
-var s3 = require('./');
+var swift = require('./');
 
-var client = new aws.S3({
-  accessKeyId: process.env.S3_ACCESS_KEY,
-  secretAccessKey: process.env.S3_SECRET_KEY
+var client = new SwiftClient({
+  endpointUrl: process.env.ENDPOINT_URL,
+  username: process.env.USERNAME,
+  password: process.env.PASSWORD,
+  domainId: process.env.DOMAIN_ID,
+  projectId: process.env.PROJECT_ID
 })
 
-var store = s3({
+var store = swift({
   client: client,
-  bucket: process.env.S3_BUCKET
+  container: process.env.SWIFT_CONTAINER
 })
 
 var common = {
